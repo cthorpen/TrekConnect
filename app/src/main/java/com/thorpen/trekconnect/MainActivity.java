@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
         /* for notifications */
         notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
-
         createNotificationChannel();
         createNotification();
         intent = new Intent(this, MainActivity.class);
