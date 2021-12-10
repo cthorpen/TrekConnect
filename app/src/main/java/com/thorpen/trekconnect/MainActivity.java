@@ -16,12 +16,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
-import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.ConnectionsClient;
-import com.google.android.gms.nearby.connection.Strategy;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "TrekConnect";
 
@@ -79,6 +77,17 @@ public class MainActivity extends AppCompatActivity {
 
         //for Nearby Connections
 //        connectionsClient = Nearby.getConnectionsClient(this);
+
+        // Test button
+        Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     //override to implement the item click listener callback to open and close drawer when icon is clicked
