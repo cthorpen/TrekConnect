@@ -29,9 +29,11 @@
         and shows the navigation drawer-->
     <!--include the menu created in the menu folder-->
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_controller"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/navigation_menu" />
+        app:menu="@menu/navigation_menu"
+        tools:ignore="InvalidId" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
