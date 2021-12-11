@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -73,6 +74,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(notificationId, notificationBuilder.build());
+
+        // Test button
+        Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
