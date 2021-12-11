@@ -1,40 +1,40 @@
 package com.thorpen.trekconnect;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavAction;
+import androidx.navigation.NavController;
 
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity{
+import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "TrekConnect";
 
-    // Our handle to Nearby Connections, and other Nearby Connections tools
-//    private ConnectionsClient connectionsClient;
-//    private static final String[] REQUIRED_PERMISSIONS =
-//            new String[] {
-//                    Manifest.permission.BLUETOOTH,
-//                    Manifest.permission.BLUETOOTH_ADMIN,
-//                    Manifest.permission.ACCESS_WIFI_STATE,
-//                    Manifest.permission.CHANGE_WIFI_STATE,
-//                    Manifest.permission.ACCESS_COARSE_LOCATION,
-//            };
-//    private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 1;
-//    private static final Strategy STRATEGY = Strategy.P2P_CLUSTER;
+    //firebase account
+    String userName = "Anonymous";
 
     //Navigation Drawer tools
     DrawerLayout drawerLayout;
@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity{
     PendingIntent pendingIntent;
     NotificationManagerCompat notificationManagerCompat;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setNavigationViewListener();
 
         /* for navigation drawer */
         // drawer layout instance to toggle the menu icon to open drawer and back button to close
@@ -75,9 +75,6 @@ public class MainActivity extends AppCompatActivity{
         notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(notificationId, notificationBuilder.build());
 
-        //for Nearby Connections
-//        connectionsClient = Nearby.getConnectionsClient(this);
-
         // Test button
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +84,7 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+
 
     }
 
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity{
         notificationBuilder.setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("TrekConnect")
                 .setContentText("Someone wants to connect with you!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 //set the intent that will fire when user taps notification
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
@@ -124,5 +122,42 @@ public class MainActivity extends AppCompatActivity{
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+
+    /* handles button clicks in drawer layout */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        Intent intent;
+
+        switch (item.getItemId()) {
+            case R.id.nav_account:
+                Toast.makeText(this, "nav account", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_settings:
+                Toast.makeText(this, "nav settings", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_findTrekkers:
+                Toast.makeText(this, "nav find trekkers", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_chat:
+                Toast.makeText(this, "nav chat", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_signout:
+                Toast.makeText(this, "nav sign out", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void setNavigationViewListener() {
+        NavigationView navigationView = findViewById(R.id.nav_controller);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
 
 }

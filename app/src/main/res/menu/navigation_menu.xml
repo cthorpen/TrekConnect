@@ -5,14 +5,27 @@
 
     <item
         android:id="@+id/nav_account"
+        android:icon="@android:drawable/ic_menu_myplaces"
         android:title="Me" />
 
     <item
-        android:id="@+id/nav_settings"
+        android:id="@+id/nav_chat"
+        android:icon="@android:drawable/ic_menu_call"
         android:title="Chat" />
 
     <item
-        android:id="@+id/nav_logout"
+        android:id="@+id/nav_findTrekkers"
+        android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Find Trekkers" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Settings" />
+
+    <item
+        android:id="@+id/nav_signout"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:title="Sign Out" />
 
 </menu>
