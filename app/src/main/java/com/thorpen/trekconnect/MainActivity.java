@@ -1,6 +1,5 @@
 package com.thorpen.trekconnect;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,19 +7,13 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavAction;
-import androidx.navigation.NavController;
 
-import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -139,10 +132,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_findTrekkers:
                 Toast.makeText(this, "nav find trekkers", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_chat:
                 Toast.makeText(this, "nav chat", Toast.LENGTH_SHORT).show();
-                intent = new Intent(MainActivity.this, ChatActivity.class);
+                intent = new Intent(MainActivity.this, ChatListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_signout:

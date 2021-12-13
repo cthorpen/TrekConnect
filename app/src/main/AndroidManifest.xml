@@ -40,7 +40,7 @@
 
         android:theme="@style/Theme.TrekConnect" >
         <activity
-            android:name=".ChatActivity"
+            android:name=".ChatListActivity"
             android:exported="true" />
 
         <activity

@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.1703125" />
         <entry key="app/src/main/res/layout/activity_chat2.xml" value="0.11979166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15185185185185185" />
+        <entry key="app/src/main/res/layout/chat_card_view_list_item.xml" value="0.21875" />
         <entry key="app/src/main/res/layout/content_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.15677083333333333" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1703125" />
