@@ -52,15 +52,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         // 2. add a GU marker (plus geocoding)
-        addGUMarker();
+        //addGUMarker();
 
         // 3. set up the my location blue dot
         enableMyLocation();
-
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     private void addGUMarker(){
@@ -71,8 +66,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        LatLng guLatLng = new LatLng(47.6670357,-117.403623);
         // 2. use geocoder
         LatLng guLatLng = getLatLngUsingGeocoding(gonzagaStr);
-
-
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title(gonzagaStr);
         markerOptions.snippet("We are here");
