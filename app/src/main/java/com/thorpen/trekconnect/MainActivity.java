@@ -100,17 +100,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(notificationId, notificationBuilder.build());
 
-        // Test button
-        Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
