@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,8 +74,6 @@ public class ChatListActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-//        chatMessageList = new ArrayList<>();
-
         Intent intent = getIntent();
 
         if (intent != null) {
@@ -137,7 +136,12 @@ public class ChatListActivity extends AppCompatActivity {
                 // add it to our list and notify our adapter
                 chatMessageList.add(chatMessage);
                 adapter.notifyDataSetChanged();
-                buildNotofication();
+                if (getLifecycle().getCurrentState().equals(Lifecycle.State.DESTROYED)) {
+                    if (!chatMessage.getAuthor().equals(userName)) {
+                        buildNotofication();
+                    }
+                }
+
             }
 
             @Override
@@ -211,6 +215,8 @@ public class ChatListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                chatMessageList.clear();
+                adapter.notifyDataSetChanged();
                 this.finish();
                 return true;
         }
@@ -250,10 +256,6 @@ public class ChatListActivity extends AppCompatActivity {
             return chatMessageList.size();
         }
     }
-
-
-    /* notifications! */
-
 
 
 }

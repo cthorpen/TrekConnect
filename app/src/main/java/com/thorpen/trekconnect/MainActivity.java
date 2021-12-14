@@ -44,6 +44,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
+/*
+Photo Credits:
+1. https://unsplash.com/photos/xfngap_DToE
+
+ */
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "TrekConnect";
