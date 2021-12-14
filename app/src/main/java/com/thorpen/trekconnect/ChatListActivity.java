@@ -35,7 +35,7 @@ import java.util.List;
 
 public class ChatListActivity extends AppCompatActivity {
 
-    CustomAdapter adapter;
+    static CustomAdapter adapter;
     Button sendButton;
 
     // firebase fields
@@ -46,7 +46,7 @@ public class ChatListActivity extends AppCompatActivity {
 
     String userName = "Anonymous";
 
-    List<ChatMessage> chatMessageList;
+    public static List<ChatMessage> chatMessageList = new ArrayList<>();
 
     String TAG = "ChatListActivityTag";
 
@@ -58,7 +58,7 @@ public class ChatListActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        chatMessageList = new ArrayList<>();
+//        chatMessageList = new ArrayList<>();
 
         Intent intent = getIntent();
 
@@ -84,8 +84,6 @@ public class ChatListActivity extends AppCompatActivity {
                     mMessagesDatabaseReference.push().setValue(chatMessage);
                     // warmup task #1
                     editText.setText("");
-                    chatMessageList.add(chatMessage);
-                    adapter.notifyItemInserted(chatMessageList.size());
                 }
 
             }
@@ -147,6 +145,7 @@ public class ChatListActivity extends AppCompatActivity {
             }
         };
 
+        mMessagesDatabaseReference.addChildEventListener(mMessagesChildEventListener);
     }
 
 
@@ -195,5 +194,10 @@ public class ChatListActivity extends AppCompatActivity {
             return chatMessageList.size();
         }
     }
+
+
+    /* notifications! */
+
+
 
 }

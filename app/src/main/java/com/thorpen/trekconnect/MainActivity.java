@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ChatMessage chatMessage =
                         dataSnapshot.getValue(ChatMessage.class);
                 // add it to our list and notify our adapter
-                //chatMessageList.add(chatMessage);
-                //adapter.notifyDataSetChanged();
+//                ChatListActivity.chatMessageList.add(chatMessage);
+//                ChatListActivity.adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -236,8 +236,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userName = user.getDisplayName();
         // listen for database changes with childeventlistener
         // wire it up!
-        mMessagesDatabaseReference
-                .addChildEventListener(mMessagesChildEventListener);
+        mMessagesDatabaseReference.addChildEventListener(mMessagesChildEventListener);
+
 
         welcomeTextView.setText("Welcome, " + userName + "!");
     }
