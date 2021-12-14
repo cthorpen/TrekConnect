@@ -135,12 +135,9 @@ public class ChatListActivity extends AppCompatActivity {
                 ChatMessage chatMessage =
                         dataSnapshot.getValue(ChatMessage.class);
                 // add it to our list and notify our adapter
-                if (s != null) {
-                    chatMessageList.add(chatMessage);
-                    adapter.notifyDataSetChanged();
-                    buildNotofication();
-                }
-
+                chatMessageList.add(chatMessage);
+                adapter.notifyDataSetChanged();
+                buildNotofication();
             }
 
             @Override
