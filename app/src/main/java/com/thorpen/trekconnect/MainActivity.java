@@ -47,7 +47,7 @@ import java.util.Arrays;
 /*
 Photo Credits:
 1. https://unsplash.com/photos/xfngap_DToE
-
+2. https://www.wayfair.com/decor-pillows/pdp/millwood-pines-madelynn-33-l-x-204-w-wallpaper-roll-w000825602.html
  */
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
