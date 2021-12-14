@@ -3,12 +3,18 @@ package com.thorpen.trekconnect;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,6 +43,15 @@ public class ChatListActivity extends AppCompatActivity {
 
     static CustomAdapter adapter;
     Button sendButton;
+
+    // for notifications
+    public String CHANNEL_ID = "TC01";
+    public int notificationId = 01; //MUST BE DIFFERENT FOR EACH NOTIFICATION
+    NotificationCompat.Builder notificationBuilder;
+    PendingIntent pendingIntent;
+    Intent notificationIntent;
+    NotificationManagerCompat notificationManagerCompat;
+
 
     // firebase fields
     FirebaseDatabase mFirebaseDatabase;
@@ -122,6 +137,7 @@ public class ChatListActivity extends AppCompatActivity {
                 // add it to our list and notify our adapter
                 chatMessageList.add(chatMessage);
                 adapter.notifyDataSetChanged();
+                buildNotofication();
             }
 
             @Override
@@ -148,6 +164,43 @@ public class ChatListActivity extends AppCompatActivity {
         mMessagesDatabaseReference.addChildEventListener(mMessagesChildEventListener);
     }
 
+    public void buildNotofication() {
+        notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        createNotificationChannel();
+        createNotification();
+        notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(notificationId, notificationBuilder.build());
+    }
+
+    private void createNotification() {
+        //change icon later
+        notificationBuilder.setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("TrekConnect")
+                .setContentText("You got a new message!")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                //set the intent that will fire when user taps notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+        }
+    }
 
 
 
