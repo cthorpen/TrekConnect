@@ -37,7 +37,8 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".ChatListActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:showOnLockScreen="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

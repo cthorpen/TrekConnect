@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //firebase account
     String userName = "Anonymous";
+    String email = "user@email.com";
     TextView welcomeTextView;
 
     // firebase fields
@@ -66,15 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Navigation Drawer tools
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
-
-    //Notification tools
-    public String CHANNEL_ID = "TC01";
-    public int notificationId = 01; //MUST BE DIFFERENT FOR EACH NOTIFICATION
-    NotificationCompat.Builder notificationBuilder;
-    // Create an explicit intent for an Activity in your app
-    Intent intent;
-    PendingIntent pendingIntent;
-    NotificationManagerCompat notificationManagerCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,16 +85,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
         //make the navigation drawer icon appear on the action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        /* for notifications */
-        notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        createNotificationChannel();
-        createNotification();
-        intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(notificationId, notificationBuilder.build());
 
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -234,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setupUserSignedIn(FirebaseUser user) {
         // get the user's name
         userName = user.getDisplayName();
+        email = user.getEmail();
         // listen for database changes with childeventlistener
         // wire it up!
         mMessagesDatabaseReference.addChildEventListener(mMessagesChildEventListener);
@@ -253,32 +236,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    private void createNotification() {
-        //change icon later
-        notificationBuilder.setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("TrekConnect")
-                .setContentText("Someone wants to connect with you!")
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                //set the intent that will fire when user taps notification
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-    }
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
 
     /* handles button clicks in drawer layout */
     @Override
@@ -289,6 +246,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_account:
                 Toast.makeText(this, "nav account", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startProfileActivity(intent);
                 break;
             case R.id.nav_find_nearby_trails:
                 Toast.makeText(this, "nav find trails", Toast.LENGTH_SHORT).show();
@@ -317,6 +276,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void startChatListActivity(Intent intent) {
         intent.putExtra("userName", userName);
+        startActivity(intent);
+    }
+
+    public void startProfileActivity(Intent intent) {
+        intent.putExtra("name", userName);
+        intent.putExtra("email", email);
         startActivity(intent);
     }
 

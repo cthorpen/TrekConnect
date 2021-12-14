@@ -1,6 +1,7 @@
 package com.thorpen.trekconnect;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -161,11 +162,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == LOCATION_REQUEST_CODE){
+        if(requestCode == LOCATION_REQUEST_CODE && grantResults.length != 0){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                enableMyLocation();
                 setupLastKnownLocation();
                 setupUserLocationUpdates();
+                enableMyLocation();
             }else{
                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
             }

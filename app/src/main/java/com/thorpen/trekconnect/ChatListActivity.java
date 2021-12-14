@@ -135,9 +135,12 @@ public class ChatListActivity extends AppCompatActivity {
                 ChatMessage chatMessage =
                         dataSnapshot.getValue(ChatMessage.class);
                 // add it to our list and notify our adapter
-                chatMessageList.add(chatMessage);
-                adapter.notifyDataSetChanged();
-                buildNotofication();
+                if (s != null) {
+                    chatMessageList.add(chatMessage);
+                    adapter.notifyDataSetChanged();
+                    buildNotofication();
+                }
+
             }
 
             @Override
@@ -167,7 +170,7 @@ public class ChatListActivity extends AppCompatActivity {
     public void buildNotofication() {
         notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
         createNotificationChannel();
-        createNotification();
+//        createNotification();
         notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -183,7 +186,9 @@ public class ChatListActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 //set the intent that will fire when user taps notification
                 .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true);
+
     }
 
     private void createNotificationChannel() {
@@ -194,11 +199,12 @@ public class ChatListActivity extends AppCompatActivity {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
+            channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+            createNotification();
         }
     }
 
