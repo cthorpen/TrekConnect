@@ -9,8 +9,6 @@ public class Place {
     private String longitude;
 
     // Constructor for search
-
-
     public Place(String id, String name, String latitude, String longitude) {
         this.id = id;
         this.name = name;

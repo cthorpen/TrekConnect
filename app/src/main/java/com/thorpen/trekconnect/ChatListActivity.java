@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -52,7 +53,7 @@ public class ChatListActivity extends AppCompatActivity {
     PendingIntent pendingIntent;
     Intent notificationIntent;
     NotificationManagerCompat notificationManagerCompat;
-
+    Context context;
 
     // firebase fields
     FirebaseDatabase mFirebaseDatabase;
@@ -71,15 +72,16 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
+        context = getApplicationContext();
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        //get username for chat
         Intent intent = getIntent();
-
         if (intent != null) {
             userName = intent.getStringExtra("userName");
         }
-
 
         // handle button click actions
         sendButton = findViewById(R.id.sendButton);
@@ -104,6 +106,7 @@ public class ChatListActivity extends AppCompatActivity {
 
         });
 
+        //set up recycler view
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChatListActivity.this);
         layoutManager.setStackFromEnd(true);
@@ -114,6 +117,7 @@ public class ChatListActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         setupFirebase();
+
     }
 
     private void setupFirebase() {
@@ -127,18 +131,15 @@ public class ChatListActivity extends AppCompatActivity {
         mMessagesChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                // called for each message already in our db
-                // called for each new message add to our db
-                // dataSnapshot stores the ChatMessage
                 Log.d(TAG, "onChildAdded: " + s);
                 ChatMessage chatMessage =
                         dataSnapshot.getValue(ChatMessage.class);
-                // add it to our list and notify our adapter
                 chatMessageList.add(chatMessage);
                 adapter.notifyDataSetChanged();
+
                 if (getLifecycle().getCurrentState().equals(Lifecycle.State.DESTROYED)) {
                     if (!chatMessage.getAuthor().equals(userName)) {
-                        buildNotofication();
+                        buildNotification();
                     }
                 }
 
@@ -146,52 +147,55 @@ public class ChatListActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         };
 
         mMessagesDatabaseReference.addChildEventListener(mMessagesChildEventListener);
     }
 
-    public void buildNotofication() {
+    //init notification
+    public void buildNotification() {
         notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
         createNotificationChannel();
-//        createNotification();
-        notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent = new Intent(this, ChatListActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        pendingIntent = PendingIntent.getActivity(ChatListActivity.this, 0, notificationIntent, 0);
         notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(notificationId, notificationBuilder.build());
     }
 
+    //create actual notification an show
     private void createNotification() {
+        context = getApplicationContext();
         //change icon later
-        notificationBuilder.setSmallIcon(R.drawable.ic_launcher_foreground)
+        notificationBuilder.setSmallIcon(R.drawable.hikingman)
                 .setContentTitle("TrekConnect")
                 .setContentText("You got a new message!")
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 //set the intent that will fire when user taps notification
-                .setContentIntent(pendingIntent)
+                .setContentIntent(
+                        PendingIntent.getActivity(
+                                context,
+                                0,
+                                new Intent(context, MainActivity.class),
+                                PendingIntent.FLAG_UPDATE_CURRENT))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true);
-
     }
 
+    //create channel
     private void createNotificationChannel() {
         // Create the NotificationChannel,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -218,10 +222,13 @@ public class ChatListActivity extends AppCompatActivity {
                 chatMessageList.clear();
                 adapter.notifyDataSetChanged();
                 this.finish();
+                Intent intent = new Intent(ChatListActivity.this, MainActivity.class);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
 

@@ -100,8 +100,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Toast.makeText(MainActivity.this, "You are now signed in", Toast.LENGTH_SHORT).show();
                         }
                         else if (result.getResultCode() == Activity.RESULT_CANCELED) {
-                            // they backed out of the sign in activity
-                            // let's exit
                             finish();
                         }
                     }
@@ -122,13 +120,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // called for each message already in our db
                 // called for each new message add to our db
-                // dataSnapshot stores the ChatMessage
                 Log.d(TAG, "onChildAdded: " + s);
                 ChatMessage chatMessage =
                         dataSnapshot.getValue(ChatMessage.class);
-                // add it to our list and notify our adapter
-//                ChatListActivity.chatMessageList.add(chatMessage);
-//                ChatListActivity.adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -148,47 +142,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
-
-        // server side setup
-        // 1. enable authentication providers like
-        // email or google or facebook etc.
-        // today we will do email and google
-        // 2. return the default values for db
-        // read and write to be authenticated
-        // client side setup
-        // 3. declare a FirebaseAuth.AuthStateListener
-        // listens for authentication events
-        // signed in and signed out are our two states
-        // 4. if the user is signed in...
-        // let's get their user name
-        // wire up our childeventlistener mMessagesChildEventListener
-        // 5. if the user is not signed in...
-        // start an activity using FirebaseUI to
-        // log our user in
-        // 6. wire up the AuthStateListener in onResume()
-        // and detach it onPause()
-        // 7. add support for the user logging out
-        // with an options menu action
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // we have two auth states, signed in and signed out
-                // get the get current user, if there is one
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // user is signed in
-                    // step 4
                     setupUserSignedIn(user);
                 } else {
-                    // user is signed out
-                    // step 5
-                    // we need an intent
-                    // the firebaseUI Github repo README.md
-                    // we have used builders before in this class
-                    // AlertDialog.Builder
-                    // return instance to support chaining
                     Intent intent = AuthUI.getInstance()
                             .createSignInIntentBuilder()
                             .setIsSmartLockEnabled(false)
@@ -214,26 +175,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStop() {
         super.onStop();
-        // remove it
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-//        chatMessageList.clear();
     }
 
     private void setupUserSignedIn(FirebaseUser user) {
-        // get the user's name
         userName = user.getDisplayName();
         email = user.getEmail();
         // listen for database changes with childeventlistener
-        // wire it up!
         mMessagesDatabaseReference.addChildEventListener(mMessagesChildEventListener);
-
-
         welcomeTextView.setText("Welcome, " + userName + "!");
     }
 
 
 
-    //override to implement the item click listener callback to open and close drawer when icon is clicked
+    //override to implement the item click listener
+    // callback to open and close drawer when icon is clicked
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -251,22 +207,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (item.getItemId()) {
             case R.id.nav_account:
-                Toast.makeText(this, "nav account", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startProfileActivity(intent);
                 break;
             case R.id.nav_find_nearby_trails:
-                Toast.makeText(this, "nav find trails", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_chat:
-                Toast.makeText(this, "nav chat", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, ChatListActivity.class);
                 startChatListActivity(intent);
                 break;
             case R.id.nav_signout:
-                Toast.makeText(this, "nav sign out", Toast.LENGTH_SHORT).show();
                 AuthUI.getInstance().signOut(this);
                 mMessagesDatabaseReference.removeEventListener(mMessagesChildEventListener);
                 break;

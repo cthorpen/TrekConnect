@@ -22,6 +22,7 @@ public class ProfileActivity extends AppCompatActivity {
         TextView name = findViewById(R.id.nameTextView);
         TextView email = findViewById(R.id.emailTextView);
 
+        // grab intent
         Intent intent = getIntent();
         if (intent != null) {
             name.setText(new StringBuilder().append("NAME: ").
@@ -31,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    // go back to main screen
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
